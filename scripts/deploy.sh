@@ -53,11 +53,7 @@ env:
   - name: TAP_SCHEMA
     value: "${SCHEMA}"
   - name: DATABRICKS_WAREHOUSE_ID
-    value_from: sql-warehouse
-  - name: GMAIL_SENDER
-    value_from: gmail-sender
-  - name: GMAIL_APP_PASSWORD
-    value_from: gmail-password
+    value: "${WAREHOUSE_ID}"
 resources:
   - name: sql-warehouse
     sql_warehouse:
