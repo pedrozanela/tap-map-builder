@@ -39,10 +39,35 @@ targets:
   #     secret_scope: other-scope
 
 resources:
+  jobs:
+    salesforce-replication:
+      name: "TAP Map — Salesforce Replication (D-1)"
+      schedule:
+        quartz_cron_expression: "0 0 9 * * ?"  # 09:00 UTC = 06:00 BRT
+        timezone_id: America/Sao_Paulo
+      tasks:
+        - task_key: replicate
+          notebook_task:
+            notebook_path: ./notebooks/replicate_salesforce.py
+          new_cluster:
+            spark_version: "15.4.x-scala2.12"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+              spark.databricks.cluster.profile: singleNode
+            node_type_id: i3.xlarge
+            custom_tags:
+              ResourceClass: SingleNode
+      email_notifications:
+        on_failure:
+          - pedro.zanela@databricks.com
+
   apps:
     tap-map:
       name: tap-latam
       description: "TAP Map Builder — TAM, Architecture, Powerbase mapping"
+      # Required: workaround for Terraform provider bug with budget_policy_id
+      budget_policy_id: "5b62fa02-8671-46d3-96ac-64c1725dc9d9"
       source_code_path: .
       config:
         command:
