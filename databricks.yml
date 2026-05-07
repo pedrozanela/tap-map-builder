@@ -54,10 +54,6 @@ resources:
       schedule:
         quartz_cron_expression: "0 0 9 * * ?"  # 09:00 UTC = 06:00 BRT
         timezone_id: America/Sao_Paulo
-      environments:
-        - environment_key: default
-          spec:
-            client: "1"
       tasks:
         - task_key: replicate
           notebook_task:
@@ -69,7 +65,15 @@ resources:
               SECRET_KEY_LOGFOOD_PAT: ${var.logfood_pat_key}
               TARGET_CATALOG: ${var.catalog}
               TARGET_SCHEMA: ${var.schema}
-          environment_key: default
+          new_cluster:
+            spark_version: "15.4.x-scala2.12"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+              spark.databricks.cluster.profile: singleNode
+            node_type_id: i3.xlarge
+            custom_tags:
+              ResourceClass: SingleNode
       email_notifications:
         on_failure:
           - pedro.zanela@databricks.com
