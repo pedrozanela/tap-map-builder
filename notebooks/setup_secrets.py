@@ -3,11 +3,14 @@
 # MAGIC %md
 # MAGIC # TAP Map Builder — Setup Secrets
 # MAGIC
-# MAGIC Este notebook cria os secrets necessários para o envio automático de emails do TAP Map Builder.
+# MAGIC Este notebook cria todos os secrets necessários para o TAP Map Builder:
+# MAGIC - **Gmail** — envio automático de emails de aprovação
+# MAGIC - **Logfood PAT** — replicação das tabelas Salesforce
 # MAGIC
 # MAGIC **Pré-requisitos:**
 # MAGIC - Conta Gmail com [2-Step Verification](https://myaccount.google.com/security) ativada
 # MAGIC - [App Password](https://myaccount.google.com/apppasswords) gerada para a conta Gmail
+# MAGIC - PAT do workspace [logfood](https://adb-2548836972759138.18.azuredatabricks.net) (Settings → Developer → Access Tokens → Generate New Token)
 
 # COMMAND ----------
 
@@ -19,9 +22,13 @@
 # Scope name — altere conforme seu ambiente
 SECRET_SCOPE = "minha-scope"
 
-# Gmail credentials
+# Gmail credentials (para envio automático de emails de aprovação)
 GMAIL_SENDER = "seu-email@gmail.com"
 GMAIL_APP_PASSWORD = "xxxx-xxxx-xxxx-xxxx"
+
+# Logfood PAT (para replicação das tabelas Salesforce)
+# Gere em: https://adb-2548836972759138.18.azuredatabricks.net → Settings → Developer → Access Tokens
+LOGFOOD_PAT = "dapi..."
 
 # COMMAND ----------
 
@@ -46,14 +53,16 @@ except Exception as e:
 
 # COMMAND ----------
 
-import base64
-
-# Salvar secrets
+# Salvar secrets — Gmail
 w.secrets.put_secret(scope=SECRET_SCOPE, key="tap-map-gmail-sender", string_value=GMAIL_SENDER)
 print(f"✅ Secret 'tap-map-gmail-sender' salvo")
 
 w.secrets.put_secret(scope=SECRET_SCOPE, key="tap-map-gmail-password", string_value=GMAIL_APP_PASSWORD)
 print(f"✅ Secret 'tap-map-gmail-password' salvo")
+
+# Salvar secret — Logfood PAT
+w.secrets.put_secret(scope=SECRET_SCOPE, key="logfood-pat", string_value=LOGFOOD_PAT)
+print(f"✅ Secret 'logfood-pat' salvo")
 
 # COMMAND ----------
 
@@ -70,4 +79,4 @@ for s in secrets:
 # MAGIC
 # MAGIC 1. Atualize a variável `secret_scope` no `databricks.yml` com o valor de `SECRET_SCOPE` acima
 # MAGIC 2. Rode `databricks bundle deploy` para deployar o app
-# MAGIC 3. **Apague os valores de `GMAIL_SENDER` e `GMAIL_APP_PASSWORD` desta célula** após a execução
+# MAGIC 3. **Apague os valores de `GMAIL_SENDER`, `GMAIL_APP_PASSWORD` e `LOGFOOD_PAT` desta célula** após a execução
