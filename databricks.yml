@@ -66,8 +66,6 @@ resources:
             value_from: gmail-sender
           - name: GMAIL_APP_PASSWORD
             value_from: gmail-password
-          - name: APP_BASE_URL
-            value: https://tap-latam-1444828305810485.aws.databricksapps.com
       resources:
         - name: sql-warehouse
           sql_warehouse:
