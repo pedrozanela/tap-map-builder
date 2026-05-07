@@ -43,19 +43,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="TAP Map Builder", lifespan=lifespan)
 
-@app.get("/api/debug/env")
-def api_debug_env():
-    import os
-    return {
-        "GMAIL_SENDER_set": bool(os.environ.get("GMAIL_SENDER")),
-        "GMAIL_SENDER_value": os.environ.get("GMAIL_SENDER", ""),
-        "GMAIL_APP_PASSWORD_set": bool(os.environ.get("GMAIL_APP_PASSWORD")),
-        "GMAIL_APP_PASSWORD_len": len(os.environ.get("GMAIL_APP_PASSWORD", "")),
-        "APP_BASE_URL": os.environ.get("APP_BASE_URL", ""),
-        "DATABRICKS_WAREHOUSE_ID": os.environ.get("DATABRICKS_WAREHOUSE_ID", ""),
-        "all_env_keys": [k for k in os.environ.keys() if "GMAIL" in k or "WAREHOUSE" in k or "APP" in k],
-    }
-
 @app.get("/api/me")
 def api_me(request: Request):
     return _get_user_from_request(request)
