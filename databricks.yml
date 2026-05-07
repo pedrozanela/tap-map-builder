@@ -43,7 +43,6 @@ resources:
     tap-map:
       name: tap-latam
       description: "TAP Map Builder — TAM, Architecture, Powerbase mapping"
-      budget_policy_id: "5b62fa02-8671-46d3-96ac-64c1725dc9d9"
       source_code_path: .
       config:
         command:
