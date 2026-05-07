@@ -14,8 +14,6 @@ env:
     valueFrom: "gmail-sender"
   - name: "GMAIL_APP_PASSWORD"
     valueFrom: "gmail-password"
-  - name: "APP_BASE_URL"
-    value: "https://latam-tap-1444828305810485.aws.databricksapps.com"
 resources:
   - name: "sql-warehouse"
     sql_warehouse:
