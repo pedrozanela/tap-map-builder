@@ -34,7 +34,8 @@ USING DELTA
 TBLPROPERTIES ('delta.columnMapping.mode' = 'name')
 """
 
-APP_BASE_URL = os.environ.get("APP_BASE_URL", os.environ.get("DATABRICKS_APP_URL", "http://localhost:8000"))
+def _get_app_base_url() -> str:
+    return os.environ.get("APP_BASE_URL", os.environ.get("DATABRICKS_APP_URL", "http://localhost:8000"))
 
 
 def init_approval_table():
@@ -234,7 +235,7 @@ def _send_email(to_email: str, subject: str, html_body: str):
 
 def send_review_request(manager_email: str, account_name: str,
                          submitted_by: str, token: str):
-    review_url = f"{APP_BASE_URL}/?review_token={token}"
+    review_url = f"{_get_app_base_url()}/?review_token={token}"
     subject = f"[TAP Map] Revisão Solicitada — {account_name}"
     html_body = f"""
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -304,7 +305,7 @@ def send_approval_decision(sa_email: str, account_name: str, status: str,
           {comments_html}
         </table>
         <div style="text-align: center; margin: 24px 0;">
-          <a href="{APP_BASE_URL}/"
+          <a href="{_get_app_base_url()}/"
              style="background: #FF3621; color: white; padding: 12px 28px; border-radius: 6px;
                     text-decoration: none; font-weight: bold; font-size: 16px;">
             Abrir TAP Map Builder →
