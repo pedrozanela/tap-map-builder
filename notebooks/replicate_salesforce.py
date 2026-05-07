@@ -12,21 +12,30 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Configuração — edite conforme seu ambiente
+# MAGIC ## Configuração
+# MAGIC
+# MAGIC Parâmetros são injetados automaticamente pelo Job (DAB).
+# MAGIC Para rodar manualmente, edite os defaults abaixo.
 
 # COMMAND ----------
 
-# Logfood (fonte)
-LOGFOOD_HOST = "https://adb-2548836972759138.18.azuredatabricks.net"
-LOGFOOD_WAREHOUSE = "071969b1ec9a91ca"
+dbutils.widgets.text("LOGFOOD_HOST", "https://adb-2548836972759138.18.azuredatabricks.net")
+dbutils.widgets.text("LOGFOOD_WAREHOUSE", "071969b1ec9a91ca")
+dbutils.widgets.text("SECRET_SCOPE", "pedro-zanela-scope")
+dbutils.widgets.text("SECRET_KEY_LOGFOOD_PAT", "logfood-pat")
+dbutils.widgets.text("TARGET_CATALOG", "pedro_zanela")
+dbutils.widgets.text("TARGET_SCHEMA", "tap")
 
-# Secret com o PAT do logfood
-SECRET_SCOPE = "pedro-zanela-scope"
-SECRET_KEY_LOGFOOD_PAT = "logfood-pat"
+LOGFOOD_HOST = dbutils.widgets.get("LOGFOOD_HOST")
+LOGFOOD_WAREHOUSE = dbutils.widgets.get("LOGFOOD_WAREHOUSE")
+SECRET_SCOPE = dbutils.widgets.get("SECRET_SCOPE")
+SECRET_KEY_LOGFOOD_PAT = dbutils.widgets.get("SECRET_KEY_LOGFOOD_PAT")
+TARGET_CATALOG = dbutils.widgets.get("TARGET_CATALOG")
+TARGET_SCHEMA = dbutils.widgets.get("TARGET_SCHEMA")
 
-# Destino (workspace atual)
-TARGET_CATALOG = "pedro_zanela"
-TARGET_SCHEMA = "tap"
+print(f"Logfood:  {LOGFOOD_HOST} (warehouse: {LOGFOOD_WAREHOUSE})")
+print(f"Destino:  {TARGET_CATALOG}.{TARGET_SCHEMA}")
+print(f"Secrets:  {SECRET_SCOPE} / {SECRET_KEY_LOGFOOD_PAT}")
 
 # COMMAND ----------
 
