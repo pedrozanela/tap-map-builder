@@ -35,7 +35,7 @@ TBLPROPERTIES ('delta.columnMapping.mode' = 'name')
 """
 
 def _get_app_base_url() -> str:
-    return os.environ.get("APP_BASE_URL", os.environ.get("DATABRICKS_APP_URL", "http://localhost:8000"))
+    return os.environ.get("DATABRICKS_APP_URL", os.environ.get("APP_BASE_URL", "http://localhost:8000"))
 
 
 def init_approval_table():
