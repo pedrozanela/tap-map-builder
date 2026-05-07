@@ -20,15 +20,6 @@ variables:
   gmail_secret_password:
     description: Secret key for Gmail App Password
     default: tap-map-gmail-password
-  logfood_host:
-    description: Logfood workspace URL
-    default: "https://adb-2548836972759138.18.azuredatabricks.net"
-  logfood_warehouse:
-    description: Logfood SQL Warehouse ID
-    default: "071969b1ec9a91ca"
-  logfood_pat_key:
-    description: Secret key for logfood PAT
-    default: logfood-pat
 
 targets:
   dev:
@@ -47,36 +38,6 @@ targets:
       secret_scope: pedro-zanela-scope
 
 resources:
-  jobs:
-    salesforce-replication:
-      name: "TAP Map — Salesforce Replication (D-1)"
-      schedule:
-        quartz_cron_expression: "0 0 9 * * ?"  # 09:00 UTC = 06:00 BRT
-        timezone_id: America/Sao_Paulo
-      tasks:
-        - task_key: replicate
-          notebook_task:
-            notebook_path: ./notebooks/replicate_salesforce.py
-            base_parameters:
-              LOGFOOD_HOST: ${var.logfood_host}
-              LOGFOOD_WAREHOUSE: ${var.logfood_warehouse}
-              SECRET_SCOPE: ${var.secret_scope}
-              SECRET_KEY_LOGFOOD_PAT: ${var.logfood_pat_key}
-              TARGET_CATALOG: ${var.catalog}
-              TARGET_SCHEMA: ${var.schema}
-          new_cluster:
-            spark_version: "15.4.x-scala2.12"
-            num_workers: 0
-            spark_conf:
-              spark.master: "local[*]"
-              spark.databricks.cluster.profile: singleNode
-            node_type_id: i3.xlarge
-            custom_tags:
-              ResourceClass: SingleNode
-      email_notifications:
-        on_failure:
-          - pedro.zanela@databricks.com
-
   apps:
     tap-map:
       name: tap-latam
