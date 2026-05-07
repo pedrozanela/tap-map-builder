@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-gray-800 antialiased;
+  }
+}
+
+@layer components {
+  .tap-card {
+    @apply bg-white rounded-lg border border-gray-200 p-3 shadow-sm transition-all duration-200;
+  }
+  .tap-card:hover {
+    @apply shadow-md border-gray-300;
+  }
+  .tap-card.not-applicable {
+    @apply opacity-50 bg-gray-50;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    font-size: 10px;
+  }
+  .tap-card {
+    break-inside: avoid;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+  }
+}

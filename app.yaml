@@ -1,0 +1,33 @@
+command:
+  - "python"
+  - "-m"
+  - "uvicorn"
+  - "app:app"
+  - "--host"
+  - "0.0.0.0"
+  - "--port"
+  - "8000"
+env:
+  - name: "DATABRICKS_WAREHOUSE_ID"
+    valueFrom: "sql-warehouse"
+  - name: "GMAIL_SENDER"
+    valueFrom: "gmail-sender"
+  - name: "GMAIL_APP_PASSWORD"
+    valueFrom: "gmail-password"
+  - name: "APP_BASE_URL"
+    value: "https://latam-tap-1444828305810485.aws.databricksapps.com"
+resources:
+  - name: "sql-warehouse"
+    sql_warehouse:
+      id: "e9b34f7a2e4b0561"
+      permission: "CAN_USE"
+  - name: "gmail-sender"
+    secret:
+      scope: "pedro-zanela-scope"
+      key: "tap-map-gmail-sender"
+      permission: "READ"
+  - name: "gmail-password"
+    secret:
+      scope: "pedro-zanela-scope"
+      key: "tap-map-gmail-password"
+      permission: "READ"

@@ -1,0 +1,17 @@
+node_modules/
+frontend/node_modules/
+.venv/
+venv/
+__pycache__/
+.git/
+.databricks/
+*.pyc
+.DS_Store
+frontend/src/
+frontend/public/
+frontend/index.html
+frontend/tsconfig*.json
+frontend/vite.config.ts
+frontend/postcss.config.js
+frontend/tailwind.config.js
+frontend/package*.json
