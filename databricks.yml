@@ -1,0 +1,85 @@
+bundle:
+  name: tap-map-builder
+
+variables:
+  catalog:
+    description: Unity Catalog name
+    default: pedro_zanela
+  schema:
+    description: Schema for TAP Map tables
+    default: tap
+  warehouse_id:
+    description: SQL Warehouse ID (serverless recommended)
+    default: e9b34f7a2e4b0561
+  secret_scope:
+    description: Databricks secret scope for Gmail credentials
+    default: pedro-zanela-scope
+  gmail_secret_sender:
+    description: Secret key for Gmail sender address
+    default: tap-map-gmail-sender
+  gmail_secret_password:
+    description: Secret key for Gmail App Password
+    default: tap-map-gmail-password
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com
+      profile: DEFAULT
+
+  # Example: deploy to another workspace
+  # prod:
+  #   workspace:
+  #     host: https://your-other-workspace.cloud.databricks.com
+  #     profile: OTHER_PROFILE
+  #   variables:
+  #     catalog: other_catalog
+  #     warehouse_id: other-warehouse-id
+  #     secret_scope: other-scope
+
+resources:
+  apps:
+    tap-map:
+      name: tap-latam
+      description: "TAP Map Builder — TAM, Architecture, Powerbase mapping"
+      budget_policy_id: "5b62fa02-8671-46d3-96ac-64c1725dc9d9"
+      source_code_path: .
+      config:
+        command:
+          - python
+          - -m
+          - uvicorn
+          - app:app
+          - --host
+          - 0.0.0.0
+          - --port
+          - "8000"
+        env:
+          - name: TAP_CATALOG
+            value: ${var.catalog}
+          - name: TAP_SCHEMA
+            value: ${var.schema}
+          - name: DATABRICKS_WAREHOUSE_ID
+            value_from: sql-warehouse
+          - name: GMAIL_SENDER
+            value_from: gmail-sender
+          - name: GMAIL_APP_PASSWORD
+            value_from: gmail-password
+          - name: APP_BASE_URL
+            value: https://tap-latam-1444828305810485.aws.databricksapps.com
+      resources:
+        - name: sql-warehouse
+          sql_warehouse:
+            id: ${var.warehouse_id}
+            permission: CAN_USE
+        - name: gmail-sender
+          secret:
+            scope: ${var.secret_scope}
+            key: ${var.gmail_secret_sender}
+            permission: READ
+        - name: gmail-password
+          secret:
+            scope: ${var.secret_scope}
+            key: ${var.gmail_secret_password}
+            permission: READ
